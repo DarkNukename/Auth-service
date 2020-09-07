@@ -28,7 +28,7 @@ SECRET_KEY = '#mt19fkq&#wm_d5l*yy&-s+$jro%9%eo9o*6@rdq(wk2etl%x='
 DEBUG = True
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://polar-shelf-60214.herokuapp.com/']
 
 
 # Application definition
@@ -43,12 +43,14 @@ INSTALLED_APPS = [
     'users_auth',
     'services_auth',
     'oauth2',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -184,6 +186,8 @@ LOGGING = {
         }
     }
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)

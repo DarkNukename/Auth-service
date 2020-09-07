@@ -11,8 +11,8 @@ import sentry_sdk
 
 from django.conf import settings
 
-r = redis.Redis(os.environ.get("REDIS_URL"))
 
+r = redis.Redis(os.environ.get("REDIS_URL")) if os.environ.get("DEBUG") else redis.Redis()
 
 sentry_sdk.init(
     "https://e20a8a5dee99445f8917e97c3b39b260@o438046.ingest.sentry.io/5401287",
