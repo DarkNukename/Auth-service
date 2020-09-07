@@ -28,7 +28,7 @@ SECRET_KEY = '#mt19fkq&#wm_d5l*yy&-s+$jro%9%eo9o*6@rdq(wk2etl%x='
 DEBUG = True
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['https://polar-shelf-60214.herokuapp.com/']
+ALLOWED_HOSTS = ['polar-shelf-60214.herokuapp.com']
 
 
 # Application definition
