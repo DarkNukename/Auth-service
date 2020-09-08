@@ -7,7 +7,8 @@ from baseView import BaseView
 from ..models import Users
 import json
 import re
-
+import requests
+from django.conf import settings
 
 LOGGING_MIN_LENGTH = 5
 LOGGING_MAX_LENGTH = 25
@@ -59,22 +60,38 @@ class AccountsView(BaseAccontsView):
         BaseView.log(user_auth_log, request, client, client_id)
         return {'status': 'Success', 'data': response, 'code': 200}
 
-    @BaseView.authorization(('admin', 'anonymous'))
+    @BaseView.authorization(('admin','anonymous'))
     def post(self, request, client, client_id):
-        # TODO отправка данных на сервис танцоров
         data = json.loads(request.body.decode('utf-8'))
-        result = BaseAccontsView.user_validator(data)
+        
+        account_data = {}
+        account_data['login'] = data.pop('login')
+        account_data['password'] = data.pop('password')
+        data.pop('role', None)
+
+        result = BaseAccontsView.user_validator(account_data)
         if result['status'] != 'Success':
             return result
-
-        data['password'] = BaseView.hash_password(data['password'])
-        response = Users.objects.create(**data).pk
+        
+        response = requests.post(settings.DANCERS_SERVICE_BASE_URL + 'dancers/sportsmans/',
+                                headers={'Authorization': settings.SERVICE_SECRET,
+                                         'From': settings.SERVICE_ID,
+                                         'To': 'Dancers'},
+                                json=data)
+        
+        if response.status_code != 200:
+            return {'status': 'Failed', 'message': 'Service Error', 'code': 500}
+        
+        print(response.json())
+        account_data['uuid'] = response.json()['data']
+        account_data['password'] = BaseView.hash_password(account_data['password'])
+        response = Users.objects.create(**account_data).pk
         BaseView.log(user_auth_log, request, client, client_id)
         return {'status': 'Success', 'data': response, 'code': 200}
 
 class AccountView(BaseView):
 
-    @BaseView.authorization(('admin', 'anonymous'))
+    @BaseView.authorization(('admin', 'sportsman'))
     def get(self, request, uuid, client, client_id):
         response = list(Users.objects.filter(pk=uuid).values())
         if not response:
@@ -82,7 +99,7 @@ class AccountView(BaseView):
         BaseView.log(user_auth_log, request, client, client_id)
         return {'status': 'Success', 'data': response, 'code': 200}
 
-    @BaseView.authorization(('admin', 'anonymous'))
+    @BaseView.authorization(('admin', 'sportsman'))
     def patch(self, request, uuid, client, client_id):
         data = json.loads(request.body.decode('utf-8'))
         Users.objects.filter(pk=uuid).update(**data)
@@ -90,9 +107,18 @@ class AccountView(BaseView):
         BaseView.log(user_auth_log, request, client, client_id)
         return {'status': 'Success', 'data': response, 'code': 200}
 
-    @BaseView.authorization(('admin', 'anonymous'))
+    @BaseView.authorization(('admin', 'sportsman', 'anonymous'))
     def delete(self, request, uuid, client, client_id):
-        # TODO отправлка данных на сервис танцоров
+
+        response = requests.delete(settings.DANCERS_SERVICE_BASE_URL + 'dancers/sportsman/{}/'.format(uuid),
+                                headers={'Authorization': settings.SERVICE_SECRET,
+                                         'From': settings.SERVICE_ID,
+                                         'To': 'Dancers'},
+            )
+        print(response.status_code)
+        if response.status_code != 200:         
+            return {'status': 'Failed', 'message': 'Service Error', 'code': 500}
+
         entry = Users.objects.filter(pk=uuid)
         entry.delete()
         BaseView.log(user_auth_log, request, client, client_id)

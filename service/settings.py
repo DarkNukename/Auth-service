@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = '#mt19fkq&#wm_d5l*yy&-s+$jro%9%eo9o*6@rdq(wk2etl%x='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 # DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['polar-shelf-60214.herokuapp.com']
+ALLOWED_HOSTS = ['polar-shelf-60214.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -147,6 +147,9 @@ OAUTH2_ACCESS_TOKEN_TTL = datetime.timedelta(minutes=5)
 OAUTH2_REFRESH_TOKEN_TTL = datetime.timedelta(minutes=5)
 OAUTH2_ACCESS_TOKEN_SIZE = 32
 
+DANCERS_SERVICE_BASE_URL = 'http://127.0.0.1:8001/' if DEBUG else 'https://fierce-plains-12493.herokuapp.com/'
+SERVICE_ID = 'Auth'
+SERVICE_SECRET = 'dirty_secret'
 
 LOGGING = {
     'version': 1,

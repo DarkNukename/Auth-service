@@ -45,6 +45,10 @@ class BaseView(View):
 
     @staticmethod
     def token_verification(token, *params):
+        
+        if token == settings.SERVICE_SECRET:
+            return {'status': 'Success', 'data': {'type': 'Service', 'from_service': 'Auth', 'to_service': 'Dancers'}}
+        
         data = r.hgetall(token)
         decode_data = {}
         if data:
