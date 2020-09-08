@@ -13,7 +13,7 @@ import base64
 from django.conf import settings
 
 
-r = redis.Redis() if settings.DEBUG else redis.Redis(os.environ.get("REDIS_URL"))
+r = redis.Redis() if settings.DEBUG else redis.Redis(os.environ.get("REDIS_URL").encode("idna"))
 
 sentry_sdk.init(
     "https://e20a8a5dee99445f8917e97c3b39b260@o438046.ingest.sentry.io/5401287",
@@ -84,7 +84,7 @@ class BaseView(View):
         ttl = {'access_token': access_token_ttl, 'refresh_token': refresh_token_ttl}
         for token in ('access_token', 'refresh_token'):
             for key, value in fields.items():
-                r.hset(tokens[token].encode("idna"), key.encode("idna"), str(value).encode("idna"))
+                r.hset(tokens[token], key, str(value))
             r.expire(tokens[token], ttl[token])
         return tokens
 
