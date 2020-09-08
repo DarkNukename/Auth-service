@@ -12,7 +12,8 @@ import base64
 
 from django.conf import settings
 
-r = redis.Redis() if settings.DEBUG else redis.Redis(base64.b64encode(os.environ.get("REDIS_URL").encode()).decode('ascii'))
+# r = redis.Redis() if settings.DEBUG else redis.Redis(os.environ.get("REDIS_URL"))
+r = redis.Redis(os.environ.get("REDIS_URL"))
 
 sentry_sdk.init(
     "https://e20a8a5dee99445f8917e97c3b39b260@o438046.ingest.sentry.io/5401287",
