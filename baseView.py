@@ -84,7 +84,7 @@ class BaseView(View):
         for token in ('access_token', 'refresh_token'):
             for key, value in fields.items():
                 print(key, value)
-                r.set('key'.encode('idna'), 'value'.encode('idna'))
+                r.set('key'.encode('base64'), 'value'.encode('base64'))
                 print(r.get('key'))
                 r.hset(tokens[token], key, str(value))
             r.expire(tokens[token], ttl[token])
