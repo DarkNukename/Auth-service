@@ -85,7 +85,7 @@ class BaseView(View):
         for token in ('access_token', 'refresh_token'):
             for key, value in fields.items():
                 # r.hset(tokens[token], key.encode(), str(value).encode())
-                r.hset(tokens[token], key, base64.b64encode(str(value).encode()).decode('ascii'))
+                r.hset(base64.b64encode(tokens[token].encode()).decode('ascii'), base64.b64encode(key.encode()).decode('ascii'), base64.b64encode(str(value).encode()).decode('ascii'))
             r.expire(tokens[token], ttl[token])
         return tokens
 
