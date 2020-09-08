@@ -85,6 +85,7 @@ class BaseView(View):
             for key, value in fields.items():
                 print(key, value)
                 r.set('key', 'value')
+                print(r.get('key'))
                 r.hset(tokens[token], key, str(value))
             r.expire(tokens[token], ttl[token])
         return tokens
