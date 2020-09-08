@@ -8,6 +8,7 @@ import redis
 import os
 import hashlib
 import sentry_sdk
+import base64
 
 from django.conf import settings
 
@@ -83,7 +84,8 @@ class BaseView(View):
         ttl = {'access_token': access_token_ttl, 'refresh_token': refresh_token_ttl}
         for token in ('access_token', 'refresh_token'):
             for key, value in fields.items():
-                r.hset(tokens[token], key.encode(), str(value).encode())
+                # r.hset(tokens[token], key.encode(), str(value).encode())
+                r.hset(tokens[token], key, base64.b64encode(value.encode()).decode('ascii'))
             r.expire(tokens[token], ttl[token])
         return tokens
 
