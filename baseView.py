@@ -13,7 +13,7 @@ import base64
 from django.conf import settings
 
 # r = redis.Redis() if settings.DEBUG else redis.Redis(os.environ.get("REDIS_URL"))
-r = rr = redis.from_url(os.environ.get("REDIS_URL"))
+r = redis.from_url(os.environ.get("REDIS_URL"))
 
 sentry_sdk.init(
     "https://e20a8a5dee99445f8917e97c3b39b260@o438046.ingest.sentry.io/5401287",
@@ -32,8 +32,8 @@ class BaseView(View):
         refresh_token = secrets.token_urlsafe(refresh_token_size)
 
         now = datetime.datetime.now()
-        access_token_valid_until = (now + access_token_ttl).strftime('%d/%m/%y %H:%M%:%S')
-        refresh_token_valid_until = (now + refresh_token_ttl).strftime('%d/%m/%y %H:%M%:%S')
+        access_token_valid_until = (now + access_token_ttl).strftime('%d/%m/%y %H:%M:%S')
+        refresh_token_valid_until = (now + refresh_token_ttl).strftime('%d/%m/%y %H:%M:%S')
 
         tokens = {
             'access_token': access_token,
