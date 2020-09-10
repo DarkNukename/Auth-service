@@ -132,12 +132,12 @@ STATIC_URL = '/static/'
 import datetime
 
 USERS_ACCESS_TOKEN_TTL = datetime.timedelta(minutes=10)
-USERS_REFRESH_TOKEN_TTL = datetime.timedelta(minutes=10)
+USERS_REFRESH_TOKEN_TTL = datetime.timedelta(minutes=60)
 USERS_ACCESS_TOKEN_SIZE = 32
 USERS_REFRESH_TOKEN_SIZE = 32
 
-SERVICES_ACCESS_TOKEN_TTL = datetime.timedelta(minutes=5)
-SERVICES_REFRESH_TOKEN_TTL = datetime.timedelta(minutes=5)
+SERVICES_ACCESS_TOKEN_TTL = datetime.timedelta(minutes=10)
+SERVICES_REFRESH_TOKEN_TTL = datetime.timedelta(minutes=60)
 SERVICES_ACCESS_TOKEN_SIZE = 32
 SERVICES_REFRESH_TOKEN_SIZE = 32
 
